@@ -16,6 +16,8 @@ public class CommonConfig {
     public static ForgeConfigSpec.IntValue MAX_PEBBLES_PER_CHUNK;
     public static ForgeConfigSpec.IntValue MAX_TWIGS_PER_CHUNK;
     public static ForgeConfigSpec.BooleanValue TOOL_NEUTERING;
+    public static ForgeConfigSpec.BooleanValue ENABLE_STONE_PUNCHING;
+    public static ForgeConfigSpec.BooleanValue ENABLE_WOOD_PUNCHING;
     public static ForgeConfigSpec.BooleanValue REMOVE_WOODEN_TOOL_FUNC;
     public static ForgeConfigSpec.BooleanValue REMOVE_STONE_TOOL_FUNC;
     public static ForgeConfigSpec.BooleanValue MAKE_GROUND_BLOCKS_HARDER;
@@ -47,6 +49,8 @@ public class CommonConfig {
         MAX_PEBBLES_PER_CHUNK = COMMON_BUILDER.comment("The maximum number of pebbles that can be found in each chunk").defineInRange("maxPebblesPerChunk", 5, 0, 256);
         MAX_TWIGS_PER_CHUNK = COMMON_BUILDER.comment("The maximum number of twigs that can be found in each chunk").defineInRange("maxTwigsPerChunk", 3, 0, 256);
         TOOL_NEUTERING = COMMON_BUILDER.comment("Make disabled tools completely useless - can't even break grass.").define("toolNeutering", false);
+        ENABLE_STONE_PUNCHING = COMMON_BUILDER.comment("Setting this to true will allow punching stone-like materials with your bare hand without being damaged").define("enableStonePunching", false);
+        ENABLE_WOOD_PUNCHING = COMMON_BUILDER.comment("Setting this to true will allow punching wooden materials with your bare hand without being damaged").define("enableWoodPunching", false);
         REMOVE_WOODEN_TOOL_FUNC = COMMON_BUILDER.comment("Setting this to true prevents the ability to use wooden tools, though you can still craft them for compatibility.").define("removeWoodenToolFunctionality", true);
         REMOVE_STONE_TOOL_FUNC = COMMON_BUILDER.comment("Setting this to true prevents the ability to use stone tools, though you can still craft them for compatibility.").define("removeStoneToolFunctionality", true);
         MAKE_GROUND_BLOCKS_HARDER = COMMON_BUILDER.comment("Setting this to true will make ground blocks (e.g. sand, dirt, gravel) harder to break without the correct tool.").define("makeGroundBlocksHarder", true);
