@@ -16,6 +16,7 @@ public class DamageTypes {
     private static ResourceKey<DamageType> register(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Constants.MOD_ID, name));
     }
+
     public static DamageSource getDamageSource(Level level, ResourceKey<DamageType> key) {
         return level.damageSources().source(key);
     }

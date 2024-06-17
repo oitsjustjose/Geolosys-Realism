@@ -23,14 +23,15 @@ public class StoneBreak {
 
     @SubscribeEvent
     public void registerEvent(PlayerEvent.BreakSpeed evt) {
+        if (CommonConfig.ENABLE_STONE_PUNCHING.get()) return;
         if (evt.getState() == null || evt.getEntity() == null || evt.getPosition().isEmpty()) return;
         if (evt.getState().is(IGNORED_STONE_BLOCKS) || !evt.getState().is(STONE_BLOCKS)) return;
+        if (evt.getEntity().level().isClientSide()) return;
 
+        var level = evt.getEntity().level();
         var heldItem = evt.getEntity().getMainHandItem();
         if (heldItem.is(CONSIDERED_AS_PICKAXE)) return;
         if (heldItem.canPerformAction(ToolActions.PICKAXE_DIG)) return;
-
-        var level = evt.getEntity().level();
         evt.setCanceled(true);
 
         // Random chance to even perform the hurt anim if the player is empty-handed
