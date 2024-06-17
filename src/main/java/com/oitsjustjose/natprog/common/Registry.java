@@ -63,6 +63,7 @@ public class Registry {
     public RegistryObject<Item> copperSaw;
     public RegistryObject<Item> bronzeSaw;
     public RegistryObject<Item> steelSaw;
+    public RegistryObject<BlockItem> stickBlockItem;
     // endregion ITEMS
 
     // region BLOCKS
@@ -147,6 +148,7 @@ public class Registry {
         this.copperSaw = ItemRegistry.register("copper_saw", () -> new SawItem(copperTier));
         this.bronzeSaw = ItemRegistry.register("bronze_saw", () -> new SawItem(bronzeTier));
         this.steelSaw = ItemRegistry.register("steel_saw", () -> new SawItem(steelTier));
+        this.stickBlockItem = ItemRegistry.register("stick_block_item", () -> new BlockItem(this.twigBlock.get(), new Item.Properties()));
     }
 
     public void RegisterRecipeStuff() {
@@ -160,46 +162,44 @@ public class Registry {
     }
 
     public void RegisterCreativeTab() {
-        CreativeTab = TabRegistry.register("items", () -> {
-            return CreativeModeTab.builder().icon(() -> new ItemStack(ironSaw.get())).title(Component.translatable("itemGroup." + Constants.MOD_ID + ".name")).displayItems((params, output) -> {
-                var npItems = ForgeRegistries.ITEMS.getKeys().stream().filter(x -> x.getNamespace().equals(Constants.MOD_ID));
+        CreativeTab = TabRegistry.register("items", () -> CreativeModeTab.builder().icon(() -> new ItemStack(ironSaw.get())).title(Component.translatable("itemGroup." + Constants.MOD_ID + ".name")).displayItems((params, output) -> {
+            var npItems = ForgeRegistries.ITEMS.getKeys().stream().filter(x -> x.getNamespace().equals(Constants.MOD_ID) && !x.getPath().equals("stick_block_item"));
 
-                npItems.sorted((a, b) -> {
-                    var x = ForgeRegistries.ITEMS.getValue(a);
-                    var y = ForgeRegistries.ITEMS.getValue(b);
+            npItems.sorted((a, b) -> {
+                var x = ForgeRegistries.ITEMS.getValue(a);
+                var y = ForgeRegistries.ITEMS.getValue(b);
 
-                    // Sort saws first, then alphabetically
-                    if (x instanceof SawItem && y instanceof SawItem) return a.compareTo(b);
-                    if (x instanceof SawItem) return -1;
-                    if (y instanceof SawItem) return 1;
+                // Sort saws first, then alphabetically
+                if (x instanceof SawItem && y instanceof SawItem) return a.compareTo(b);
+                if (x instanceof SawItem) return -1;
+                if (y instanceof SawItem) return 1;
 
-                    // Other tools next, alphabetically
-                    if (x instanceof TieredItem && y instanceof TieredItem) return a.compareTo(b);
-                    if (x instanceof TieredItem) return -1;
-                    if (y instanceof TieredItem) return 1;
+                // Other tools next, alphabetically
+                if (x instanceof TieredItem && y instanceof TieredItem) return a.compareTo(b);
+                if (x instanceof TieredItem) return -1;
+                if (y instanceof TieredItem) return 1;
 
-                    // Then pebbles, alphabetically
-                    if (x instanceof PebbleItem && y instanceof PebbleItem) return a.compareTo(b);
-                    if (x instanceof PebbleItem) return -1;
-                    if (y instanceof PebbleItem) return 1;
+                // Then pebbles, alphabetically
+                if (x instanceof PebbleItem && y instanceof PebbleItem) return a.compareTo(b);
+                if (x instanceof PebbleItem) return -1;
+                if (y instanceof PebbleItem) return 1;
 
-                    // Then alphabetically
-                    return a.compareTo(b);
-                }).forEach(key -> { // Add to tab
-                    var item = ForgeRegistries.ITEMS.getValue(key);
-                    if (item instanceof PebbleItem pebble) {
-                        if (pebble.getBlock() instanceof PebbleBlock block) {
-                            if (block.getParentBlock() != null) {
-                                output.accept(new ItemStack(item));
-                            }
-                        }
-                    } else {
-                        if (item != null) {
+                // Then alphabetically
+                return a.compareTo(b);
+            }).forEach(key -> { // Add to tab
+                var item = ForgeRegistries.ITEMS.getValue(key);
+                if (item instanceof PebbleItem pebble) {
+                    if (pebble.getBlock() instanceof PebbleBlock block) {
+                        if (block.getParentBlock() != null) {
                             output.accept(new ItemStack(item));
                         }
                     }
-                });
-            }).build();
-        });
+                } else {
+                    if (item != null) {
+                        output.accept(new ItemStack(item));
+                    }
+                }
+            });
+        }).build());
     }
 }
