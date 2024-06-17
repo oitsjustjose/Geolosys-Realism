@@ -26,7 +26,10 @@ public class StoneBreak {
         if (CommonConfig.ENABLE_STONE_PUNCHING.get()) return;
         if (evt.getState() == null || evt.getEntity() == null || evt.getPosition().isEmpty()) return;
         if (evt.getState().is(IGNORED_STONE_BLOCKS) || !evt.getState().is(STONE_BLOCKS)) return;
-        if (evt.getEntity().level().isClientSide()) return;
+        if (evt.getEntity().level().isClientSide()) {
+            evt.setCanceled(true);
+            return;
+        }
 
         var level = evt.getEntity().level();
         var heldItem = evt.getEntity().getMainHandItem();

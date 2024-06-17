@@ -27,7 +27,10 @@ public class WoodBreak {
         if (CommonConfig.ENABLE_WOOD_PUNCHING.get()) return;
         if (evt.getState() == null || evt.getEntity() == null || evt.getPosition().isEmpty()) return;
         if (evt.getState().is(IGNORED_WOOD_BLOCKS) || !evt.getState().is(WOOD_BLOCKS)) return;
-        if (evt.getEntity().level().isClientSide()) return;
+        if (evt.getEntity().level().isClientSide()) {
+            evt.setCanceled(true);
+            return;
+        }
 
         var heldItem = evt.getEntity().getMainHandItem();
         if (heldItem.is(CONSIDERED_AS_AXE)) return;
