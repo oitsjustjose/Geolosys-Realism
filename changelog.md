@@ -1,5 +1,18 @@
 # Natural Progression Changelog (1.20.1)
 
+## 2.3.8
+
+### Fixed:
+
+- Not being able to break Wood/Stone using the *right* tool.
+- "This tool is too brittle to use" tooltip showing on tools when ToolNeutering is disabled
+
+### Changed:
+
+- Improved the layout and readability of the Config File
+- Internal refactors to deduplicate the code that is responsible for checking if a block can be broken and handling
+  damaging the player & cancelling the break progress
+
 ## 2.3.7
 
 ### Added:
