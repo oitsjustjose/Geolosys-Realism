@@ -58,7 +58,7 @@ public class DynamicItemTier implements Tier {
         if (tag == null) return this;
 
         var tagItems = Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).getTag(tag).stream().toList();
-        if (tagItems.size() == 0) {
+        if (tagItems.isEmpty()) {
             this.repairIngredient = Ingredient.of(Items.BARRIER);
             NatProg.getInstance().LOGGER.warn("Dynamic saw repair material {} could not be found. Defaulting to Bedrock", tag.toString());
         } else {

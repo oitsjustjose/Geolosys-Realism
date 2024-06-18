@@ -53,7 +53,7 @@ public class PebbleItem extends BlockItem {
                     if (player.getRandom().nextInt(100) <= 5) {
                         player.getItemInHand(swingArm).shrink(1);
 
-                        if (player.getRandom().nextInt(100) < CommonConfig.FLINT_CHANCE.get()) {
+                        if (player.getRandom().nextInt(100) < CommonConfig.FLINT_KNAP_CHANCE.get()) {
                             level.playSound(null, player.getOnPos(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.PLAYERS, 1.0F, 0.5F);
                             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(Items.FLINT, 1));
                         } else {

@@ -4,12 +4,10 @@ import com.oitsjustjose.natprog.client.ClientProxy;
 import com.oitsjustjose.natprog.common.CommonProxy;
 import com.oitsjustjose.natprog.common.Registry;
 import com.oitsjustjose.natprog.common.config.CommonConfig;
+import com.oitsjustjose.natprog.common.event.BlockBreak;
 import com.oitsjustjose.natprog.common.event.BoneEvent;
 import com.oitsjustjose.natprog.common.event.ToolNeutering;
 import com.oitsjustjose.natprog.common.event.TwigPlacement;
-import com.oitsjustjose.natprog.common.event.block.EarthBreak;
-import com.oitsjustjose.natprog.common.event.block.StoneBreak;
-import com.oitsjustjose.natprog.common.event.block.WoodBreak;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -33,9 +31,7 @@ public class NatProg {
         REGISTRY = new Registry();
         REGISTRY.RegisterAll(FMLJavaModLoadingContext.get());
 
-        MinecraftForge.EVENT_BUS.register(new WoodBreak());
-        MinecraftForge.EVENT_BUS.register(new StoneBreak());
-        MinecraftForge.EVENT_BUS.register(new EarthBreak());
+        MinecraftForge.EVENT_BUS.register(new BlockBreak());
         MinecraftForge.EVENT_BUS.register(new ToolNeutering());
         MinecraftForge.EVENT_BUS.register(new BoneEvent());
         MinecraftForge.EVENT_BUS.register(new TwigPlacement());

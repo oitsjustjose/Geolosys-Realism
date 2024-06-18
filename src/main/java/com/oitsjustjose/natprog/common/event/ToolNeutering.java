@@ -23,6 +23,7 @@ public class ToolNeutering {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void onHover(ItemTooltipEvent evt) {
+        if (!CommonConfig.TOOL_NEUTERING.get()) return;
         var stack = evt.getItemStack();
         if (stack.isEmpty()) return;
         if (stack.is(ALLOWED_WOOD_TOOLS) || stack.is(ALLOWED_STONE_TOOLS)) return;
@@ -56,6 +57,7 @@ public class ToolNeutering {
 
     @SubscribeEvent
     public void registerEvent(AttackEntityEvent evt) {
+        if (!CommonConfig.TOOL_NEUTERING.get()) return;
         if (evt.getEntity() == null) return;
         var stack = evt.getEntity().getMainHandItem();
         if (stack.isEmpty()) return;

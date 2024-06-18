@@ -42,7 +42,7 @@ public class BoneEvent {
         if (boneHand == null || flintHand == null) return;
         evt.getEntity().swing(flintHand);
 
-        if (evt.getEntity().getRandom().nextInt(100) <= CommonConfig.BONE_SHARD_CHANCE.get()) {
+        if (evt.getEntity().getRandom().nextInt(100) <= CommonConfig.BONE_KNAP_CHANCE.get()) {
             if (evt.getLevel().isClientSide()) {
                 evt.getEntity().playSound(SoundEvents.PARROT_IMITATE_SKELETON, 1F, 0.7F);
             } else {
