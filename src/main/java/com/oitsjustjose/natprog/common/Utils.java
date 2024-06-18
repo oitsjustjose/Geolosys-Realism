@@ -2,16 +2,24 @@ package com.oitsjustjose.natprog.common;
 
 import com.oitsjustjose.natprog.Constants;
 import com.oitsjustjose.natprog.NatProg;
+import com.oitsjustjose.natprog.common.config.CommonConfig;
+import com.oitsjustjose.natprog.common.event.DamageTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -123,10 +131,62 @@ public class Utils {
         return state.liquid() || state.isAir() || state.is(BlockTags.LEAVES) || state.canBeReplaced();
     }
 
+    /**
+     * Fixes the state for SNOWY when replacing a block above
+     *
+     * @param level     an ISeedReader instance
+     * @param posPlaced The position where we placed a block
+     */
     public static void fixSnowyBlock(WorldGenLevel level, BlockPos posPlaced) {
         var below = level.getBlockState(posPlaced.below());
         if (below.hasProperty(BlockStateProperties.SNOWY)) {
             level.setBlock(posPlaced.below(), below.setValue(BlockStateProperties.SNOWY, Boolean.FALSE), 2 | 16);
         }
+    }
+
+    public static void breakHandler(PlayerEvent.BreakSpeed evt, BreakHandlerData data) {
+        if (!data.enabled) return;
+
+        if (evt.getState() == null || evt.getEntity() == null || evt.getPosition().isEmpty()) return;
+        // Block is either ignored or isn't an applicable block via the tag
+        if (evt.getState().is(data.ignoredBlocks) || !evt.getState().is(data.appliedBlocks)) return;
+
+        var level = evt.getEntity().level();
+        var heldItem = evt.getEntity().getMainHandItem();
+        // Item was manually added as an applicable tool via tag
+        if (heldItem.is(data.addedTools)) return;
+        // Item is naturally able to do the required action
+        if (heldItem.canPerformAction(data.requiredAction)) return;
+        evt.setCanceled(true);
+
+        // ONLY do these things on the server-side, otherwise using Jade will cause you to take damage by using your eyeballs
+        if (!level.isClientSide()) {
+            // Random chance to even perform the hurt anim if the player is empty-handed
+            if (CommonConfig.INCORRECT_TOOL_DAMAGE.get() && evt.getEntity().getMainHandItem().isEmpty() && evt.getEntity().getRandom().nextInt(25) == 1) {
+                // And when it's shown, random chance to actually hurt from breaking bones
+                if (level.getRandom().nextDouble() <= data.hurtChance) {
+                    evt.getEntity().hurt(DamageTypes.getDamageSource(level, data.damageType), 1F);
+                } else {
+                    NatProg.proxy.doHurtAnimation(evt.getEntity());
+                }
+            }
+
+            // Show breaking help, if applicable
+            if (CommonConfig.SHOW_BREAKING_HELP.get()) {
+                evt.getEntity().displayClientMessage(Component.translatable(data.breakHelpKey), true);
+            }
+        }
+    }
+
+    public record BreakHandlerData(
+            boolean enabled,
+            TagKey<Block> ignoredBlocks,
+            TagKey<Block> appliedBlocks,
+            TagKey<Item> addedTools,
+            ToolAction requiredAction,
+            ResourceKey<DamageType> damageType,
+            float hurtChance,
+            String breakHelpKey
+    ) {
     }
 }

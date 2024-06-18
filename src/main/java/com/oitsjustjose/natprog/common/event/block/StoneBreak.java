@@ -1,10 +1,9 @@
 package com.oitsjustjose.natprog.common.event.block;
 
 import com.oitsjustjose.natprog.Constants;
-import com.oitsjustjose.natprog.NatProg;
+import com.oitsjustjose.natprog.common.Utils;
 import com.oitsjustjose.natprog.common.config.CommonConfig;
 import com.oitsjustjose.natprog.common.event.DamageTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -23,32 +22,15 @@ public class StoneBreak {
 
     @SubscribeEvent
     public void registerEvent(PlayerEvent.BreakSpeed evt) {
-        if (CommonConfig.ENABLE_STONE_PUNCHING.get()) return;
-        if (evt.getState() == null || evt.getEntity() == null || evt.getPosition().isEmpty()) return;
-        if (evt.getState().is(IGNORED_STONE_BLOCKS) || !evt.getState().is(STONE_BLOCKS)) return;
-        if (evt.getEntity().level().isClientSide()) {
-            evt.setCanceled(true);
-            return;
-        }
-
-        var level = evt.getEntity().level();
-        var heldItem = evt.getEntity().getMainHandItem();
-        if (heldItem.is(CONSIDERED_AS_PICKAXE)) return;
-        if (heldItem.canPerformAction(ToolActions.PICKAXE_DIG)) return;
-        evt.setCanceled(true);
-
-        // Random chance to even perform the hurt anim if the player is empty-handed
-        if (evt.getEntity().getMainHandItem().isEmpty() && evt.getEntity().getRandom().nextInt(25) == 1 && CommonConfig.INCORRECT_TOOL_DAMAGE.get()) {
-            // And when it's shown, random chance to actually hurt from breaking bones
-            if (evt.getEntity().getRandom().nextInt(2) == 1) {
-                evt.getEntity().hurt(DamageTypes.getDamageSource(level, DamageTypes.CRUSHING), 1F);
-            } else {
-                NatProg.proxy.doHurtAnimation(evt.getEntity());
-            }
-        }
-
-        // Show breaking help, if applicable
-        if (!CommonConfig.SHOW_BREAKING_HELP.get()) return;
-        evt.getEntity().displayClientMessage(Component.translatable("natprog.stone.warning"), true);
+        Utils.breakHandler(evt, new Utils.BreakHandlerData(
+                CommonConfig.ENABLE_STONE_PUNCHING.get(),
+                IGNORED_STONE_BLOCKS,
+                STONE_BLOCKS,
+                CONSIDERED_AS_PICKAXE,
+                ToolActions.PICKAXE_DIG,
+                DamageTypes.CRUSHING,
+                .50F,
+                "natprog.stone.warning"
+        ));
     }
 }
