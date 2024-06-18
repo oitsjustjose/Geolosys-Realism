@@ -62,7 +62,7 @@ public class Utils {
      * @return true if the block is in a non-water fluid
      */
     public static boolean inNonWaterFluid(WorldGenLevel level, BlockPos pos) {
-        return (level.getBlockState(pos).liquid()) && !isInWater(level, pos);
+        return (level.getBlockState(pos).getFluidState().isEmpty()) && !isInWater(level, pos);
     }
 
     @Nullable
@@ -128,7 +128,7 @@ public class Utils {
      */
     public static boolean canReplace(WorldGenLevel level, BlockPos pos) {
         var state = level.getBlockState(pos);
-        return state.liquid() || state.isAir() || state.is(BlockTags.LEAVES) || state.canBeReplaced();
+        return !state.getFluidState().isEmpty() || state.isAir() || state.is(BlockTags.LEAVES) || state.canBeReplaced();
     }
 
     /**
