@@ -52,7 +52,7 @@ public class Utils {
      * @return true if the block is in a non-water fluid
      */
     public static boolean inNonWaterFluid(WorldGenLevel level, BlockPos pos) {
-        return (level.getBlockState(pos).getFluidState().isEmpty()) && !isInWater(level, pos);
+        return (!level.getBlockState(pos).getFluidState().isEmpty()) && !isInWater(level, pos);
     }
 
     @Nullable
