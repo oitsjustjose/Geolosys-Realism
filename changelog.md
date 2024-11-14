@@ -1,5 +1,16 @@
 # Natural Progression Changelog (1.20.1)
 
+## 2.3.9
+
+I've been super busy with work lately, so further updates are on an as-needed basis or unless someone provides a PR for
+a fix or requested feature, like this one! Thanks for understanding ❤️
+
+### Fixed:
+
+- Pebbles not generating anywhere *except* for underwater.
+    - Thank you to kaiser_czar for [this PR](https://github.com/oitsjustjose/Natural-Progression/pull/97) which fixed
+      this issue.
+
 ## 2.3.8
 
 ### Fixed:
